@@ -39,7 +39,7 @@ def date = new SimpleDateFormat( 'MMMM dd, yyyy' ).format( d )
 
 // application info
 group = 'com.happinesea'
-archivesBaseName = 'rws-facade'
+archivesBaseName = 'rws-lib-tutorial'
 description = ''
 
 
