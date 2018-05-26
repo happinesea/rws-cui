@@ -94,3 +94,20 @@ run {
 task wrapper(type: Wrapper) {
     gradleVersion = '4.5.1'
 }
+
+task launch(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+
+    doFirst {
+	if (!project.hasProperty("main")) {
+	    throw new IllegalArgumentException("""
+                | usage:
+                |         ./gradlew $name -Pmain=<ClassName>
+                """.stripMargin())
+	}
+
+	systemProperties = System.properties as Map
+
+	main = project.main
+    }
+}
