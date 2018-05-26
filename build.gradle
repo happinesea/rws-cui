@@ -7,7 +7,9 @@ buildscript {
 	groovyVersion = '2.4.12'
     }
     
-    repositories { maven { url "https://plugins.gradle.org/m2/" } }
+    repositories { 
+	maven { url "https://plugins.gradle.org/m2/" }
+    }
     dependencies {
 	classpath "gradle.plugin.com.palantir:jacoco-coverage:0.4.0"
 	classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2"
@@ -28,16 +30,13 @@ def jdkVersion = 1.9
 sourceCompatibility = jdkVersion
 targetCompatibility = jdkVersion
 
-def currentFile = new File(".").getAbsoluteFile()
-def config = new ConfigSlurper().parse(new File(currentFile.getParentFile(), 'src/main/resources/com/happinesea/happinesea.config').toURI().toURL())
-version = config.happinesea.ec.rws.tool.version
-
 def d    = new Date()
 def time = new SimpleDateFormat( "HH:mm '(GMT'Z')'" ).format( d )
 def date = new SimpleDateFormat( 'MMMM dd, yyyy' ).format( d )
 
 
 // application info
+version = 1
 group = 'com.happinesea'
 archivesBaseName = 'rws-lib-tutorial'
 description = ''
@@ -45,18 +44,8 @@ description = ''
 
 repositories { mavenCentral() }
 
-
-
-jacocoCoverage {
-    // Enforce minimum code coverage of 50% for every Java file.
-    fileThreshold 0.5
-
-    // Whitelist files named MyClass.java from coverage requirements.
-    fileThreshold 0.0, "*.groovy"
-}
-
 dependencies {
-    compile 'com.happinesea:rws-lib:0.0.2'
+    compile 'com.happinesea:rws-lib:0.0.4'
 
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     compile "org.codehaus.groovy:groovy-templates:${groovyVersion}"
@@ -64,27 +53,9 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.5'
     compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
     compile 'org.springframework:spring-context:5.0.4.RELEASE'
-    compile 'org.apache.logging.log4j:log4j-api:2.10.0'
-    compile 'org.apache.logging.log4j:log4j-core:2.10.0'
+    compile 'org.slf4j:slf4j-log4j12:1.7.21'
     
-    //DB and GORM
-    runtime "com.h2database:h2:1.3.175"
-    //runtime "org.hsqldb:hsqldb:2.3.2"
-    //compile('mysql:mysql-connector-java:5.1.6')
-    compile("org.grails:gorm-hibernate4-spring-boot:1.0.0.GA")
-    //SOAP calls
-    //compile("com.github.groovy-wslite:groovy-wslite:0.8.0")
-    //debugging
-    runtime("org.springframework:springloaded:1.2.0.RELEASE")
-
     compile localGroovy()
-
-    //test and spock
-    testCompile 'junit:junit:4.12'
-    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-    testCompile "org.spockframework:spock-core:${spockVersion}"
-    testCompile "org.spockframework:spock-spring:${spockVersion}"
-
 }
 eclipse.classpath.file {
     whenMerged { classpath ->
@@ -105,23 +76,8 @@ sourceSets {
     main {
 	groovy { srcDirs = ['src/main/groovy']}
     }
-
-    test {
-	groovy { srcDirs = ['src/test/groovy']}
-    }
 }
 
-groovydoc{
-    use=true
-    source = sourceSets.main.groovy
-    groovyClasspath = configurations.compile
-    windowTitle = "happinesea ${archivesBaseName} groovy docs"
-    docTitle = "${archivesBaseName} API(v-${version})"
-    header = '<a href="http://lab.happinesea.com" target="_blank">happinsea</a>'
-    footer = '<a href="http://lab.happinesea.com" target="_blank">happinsea</a> API documentation was generated at ' + "$time on $date."
-    link 'http://download.oracle.com/javase/7/docs/api/', 'java.'
-    link 'http://docs.groovy-lang.org/latest/html/gapi/', 'groovy.', 'org.codehaus.groovy.'
-}
 
 jar {
     manifest {
@@ -129,7 +85,7 @@ jar {
     }
 }
 
-mainClassName = 'com.happinesea.StartupApplication'
+mainClassName = 'com.happinesea.TutorialChangeItemNameBatch'
 
 run {
     systemProperties = System.properties
